@@ -38,16 +38,12 @@ namespace SimpleServer {
       var receiveBufferSize = client.ReceiveBufferSize;
       var bytes = new byte[receiveBufferSize];
       while (true) {
-        Console.WriteLine("***1");
         var sb = new StringBuilder();
         do {
-          Console.WriteLine("***2");
           var amount = await stream.ReadAsync(bytes, 0, receiveBufferSize);
           sb.Append(Encoding.UTF8.GetString(bytes, 0, amount));
-          Console.WriteLine("***3");
         } while (stream.DataAvailable);
         var str = sb.ToString();
-        Console.WriteLine("read this from client: \"{0}\"", str);
         var message = serializer.Deserialize<JsonMessage<dynamic>>(new JsonTextReader(new StringReader(str)));
         ProcessMessageAsync(message.n, client, message.m);
       }

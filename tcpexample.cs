@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 using SimpleServer;
 
@@ -19,6 +20,10 @@ class TcpExampleServer {
       await server.SendAsync(c, "test", "hello");
       return true;
     });
+    server.On("tick", async (c, m) => {
+      Console.WriteLine("tick");
+      return true;
+    });
     server.StartInBackground();
   }
 }
@@ -28,6 +33,12 @@ class TcpExampleClient {
     var client = new TcpMessageClient("localhost", 12354);
     client.On("test", async (c, m) => {
       Console.WriteLine("client received message: {0}", m);
+      Task.Factory.StartNew(async () => {
+        while (true) {
+          await client.SendAsync(null, "tick", null);
+          await Task.Delay(1000);
+        }
+      });
       return true;
     });
     client.Start();
