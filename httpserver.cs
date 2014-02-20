@@ -106,7 +106,7 @@ namespace SimpleServer {
     }
   }
 
-  class Server {
+  class HttpServer {
     HttpListener listener;
 
     // The return value tells if you handled the request. If you return true,
@@ -121,7 +121,7 @@ namespace SimpleServer {
     List<Tuple<Regex, RequestProcessor>> routes;
     Regex urlParamRegex;
 
-    public Server(int port) {
+    public HttpServer(int port) {
       listener = new HttpListener();
       listener.Prefixes.Add("http://+:" + port + "/");
 
